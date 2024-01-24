@@ -1,0 +1,15 @@
+{
+    "domain": "unisenza_plus",
+    "name": "Unisenza Plus",
+    "version": "0.0.1",
+    "codeowners": ["@jasujm"],
+    "config_flow": true,
+    "dependencies": [],
+    "documentation": "https://github.com/jasujm/home-assistant-unisenza-plus",
+    "issue_tracker": "https://github.com/jasujm/home-assistant-unisenza-plus",
+    "homekit": {},
+    "iot_class": "cloud_push",
+    "requirements": ["pyupgw==0.5"],
+    "ssdp": [],
+    "zeroconf": []
+}
