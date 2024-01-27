@@ -10,7 +10,7 @@ from homeassistant.const import CONF_PASSWORD, CONF_USERNAME
 from homeassistant.core import HomeAssistant
 from homeassistant.data_entry_flow import FlowResult
 from homeassistant.exceptions import HomeAssistantError
-from pyupgw import create_api
+from pyupgw import create_api, AuthenticationError
 
 from .const import DOMAIN
 
@@ -29,18 +29,13 @@ async def validate_input(hass: HomeAssistant, data: dict[str, Any]) -> dict[str,
 
     Data has the keys from STEP_USER_DATA_SCHEMA with values provided by the user.
     """
-    # TODO validate the data can be used to set up a connection.
-
-    # If your PyPI package is not built with async, pass your methods
-    # to the executor:
-    # await hass.async_add_executor_job(
-    #     your_validate_func, data[CONF_USERNAME], data[CONF_PASSWORD]
-    # )
 
     try:
         await create_api(data[CONF_USERNAME], data[CONF_PASSWORD])
-    except Exception:
+    except AuthenticationError:
         raise InvalidAuth
+    except Exception:
+        raise CannotConnect
 
     # Return info that you want to store in the config entry.
     return {"title": "Unisenza Plus"}
