@@ -108,7 +108,7 @@ class UnisenzaPlusClimateEntity(ClimateEntity):
         return self._device.get_max_temp() or _DEFAULT_MAX_TEMP
 
     def _on_update_device(self, device, _changes):
-        self.schedule_update_ha_state(True)
+        self.schedule_update_ha_state(False)
 
 
 async def async_setup_entry(
