@@ -45,8 +45,10 @@ class UnisenzaPlusClimateEntity(ClimateEntity):
     def __init__(self, device: HvacDevice):
         self._device = device
 
+    async def async_update(self) -> None:
+        return await self._device.refresh()
+
     async def async_added_to_hass(self) -> None:
-        await self._device.refresh()
         self._device.subscribe(self._on_update_device)
 
     async def async_will_remove_from_hass(self) -> None:
