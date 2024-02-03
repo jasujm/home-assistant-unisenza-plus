@@ -4,7 +4,8 @@ from __future__ import annotations
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import CONF_PASSWORD, CONF_USERNAME, Platform
 from homeassistant.core import HomeAssistant
-from pyupgw import Client, create_api
+from homeassistant.exceptions import ConfigEntryAuthFailed, ConfigEntryNotReady
+from pyupgw import AuthenticationError, Client, create_api
 
 from .const import DOMAIN
 
@@ -16,15 +17,21 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
 
     hass.data.setdefault(DOMAIN, {})
 
-    api = await create_api(entry.data[CONF_USERNAME], entry.data[CONF_PASSWORD])
+    try:
+        api = await create_api(entry.data[CONF_USERNAME], entry.data[CONF_PASSWORD])
+    except AuthenticationError as ex:
+        raise ConfigEntryAuthFailed(f"Unable to authenticate") from ex
+    except Exception as ex:
+        raise ConfigEntryNotReady("Unable to connect") from ex
+
     client = Client(api)
 
     try:
         await client.populate_devices()
         await client.refresh_all_devices()
-    except:
+    except Exception as ex:
         await client.aclose()
-        raise
+        raise ConfigEntryNotReady("Unable to retrieve data from upstream") from ex
 
     hass.data[DOMAIN][entry.entry_id] = client
 

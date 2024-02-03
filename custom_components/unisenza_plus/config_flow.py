@@ -10,7 +10,7 @@ from homeassistant.const import CONF_PASSWORD, CONF_USERNAME
 from homeassistant.core import HomeAssistant
 from homeassistant.data_entry_flow import FlowResult
 from homeassistant.exceptions import HomeAssistantError
-from pyupgw import create_api, AuthenticationError
+from pyupgw import AuthenticationError, create_api
 
 from .const import DOMAIN
 
