@@ -112,6 +112,10 @@ class UnisenzaPlusClimateEntity(ClimateEntity):
     def max_temp(self):
         return self._device.get_max_temp() or _DEFAULT_MAX_TEMP
 
+    @property
+    def available(self):
+        return bool(self._device.is_available())
+
     def _on_update_device(self, device, _changes):
         self.schedule_update_ha_state(False)
 
