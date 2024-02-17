@@ -35,10 +35,15 @@ _TEMPERATURE_STEP = 0.5
 
 
 class UnisenzaPlusClimateEntity(ClimateEntity):
+    _enable_turn_on_off_backwards_compatibility = False
     _attr_should_poll = False
     _attr_has_entity_name = True
     _attr_name = None
-    _attr_supported_features = ClimateEntityFeature.TARGET_TEMPERATURE
+    _attr_supported_features = (
+        ClimateEntityFeature.TARGET_TEMPERATURE
+        | ClimateEntityFeature.TURN_ON
+        | ClimateEntityFeature.TURN_OFF
+    )
     _attr_hvac_modes = list(_SYSTEM_MODE_TO_HVAC_MODE.values())
     _attr_target_temperature_step = _TEMPERATURE_STEP
     _attr_temperature_unit = UnitOfTemperature.CELSIUS
@@ -56,15 +61,21 @@ class UnisenzaPlusClimateEntity(ClimateEntity):
     async def async_will_remove_from_hass(self) -> None:
         self._device.unsubscribe(self._on_update_device)
 
-    async def async_set_hvac_mode(self, hvac_mode):
+    async def async_set_hvac_mode(self, hvac_mode) -> None:
         """Set new HVAC mode"""
         if system_mode := _HVAC_MODE_TO_SYSTEM_MODE.get(hvac_mode):
             await self._device.update_system_mode(system_mode)
 
-    async def async_set_temperature(self, **kwargs):
+    async def async_set_temperature(self, **kwargs) -> None:
         """Set new target temperature."""
         if target_temperature := kwargs.get(ATTR_TEMPERATURE):
             await self._device.update_target_temperature(float(target_temperature))
+
+    async def async_turn_on(self) -> None:
+        await self._device.update_system_mode(SystemMode.HEAT)
+
+    async def async_turn_off(self) -> None:
+        await self._device.update_system_mode(SystemMode.OFF)
 
     @property
     def unique_id(self):
