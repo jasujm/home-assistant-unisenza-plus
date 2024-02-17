@@ -10,9 +10,10 @@ from homeassistant.components.climate.const import (
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import ATTR_TEMPERATURE, UnitOfTemperature
 from homeassistant.core import HomeAssistant
+from homeassistant.helpers import device_registry
 from homeassistant.helpers.entity import DeviceInfo
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
-from pyupgw import Client, HvacDevice, RunningState, SystemMode
+from pyupgw import Client, DeviceType, HvacDevice, RunningState, SystemMode
 
 from .const import DOMAIN
 
@@ -42,8 +43,9 @@ class UnisenzaPlusClimateEntity(ClimateEntity):
     _attr_target_temperature_step = _TEMPERATURE_STEP
     _attr_temperature_unit = UnitOfTemperature.CELSIUS
 
-    def __init__(self, device: HvacDevice):
+    def __init__(self, device: HvacDevice, gateway_mac_address: str):
         self._device = device
+        self._gateway_mac_address = device_registry.format_mac(gateway_mac_address)
 
     async def async_update(self) -> None:
         return await self._device.refresh()
@@ -77,6 +79,7 @@ class UnisenzaPlusClimateEntity(ClimateEntity):
             model=self._device.get_model(),
             serial_number=self._device.get_serial_number(),
             sw_version=self._device.get_firmware_version(),
+            via_device=(DOMAIN, self._gateway_mac_address),
         )
 
     @property
@@ -122,5 +125,7 @@ async def async_setup_entry(
     client: Client = hass.data[DOMAIN][config_entry.entry_id]
 
     async_add_entities(
-        UnisenzaPlusClimateEntity(device) for (_, device) in client.get_devices()
+        UnisenzaPlusClimateEntity(device, gateway.get_mac_address())
+        for (gateway, device) in client.get_devices()
+        if device.get_type() == DeviceType.HVAC
     )

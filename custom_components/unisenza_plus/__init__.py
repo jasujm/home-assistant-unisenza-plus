@@ -5,6 +5,7 @@ from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import CONF_PASSWORD, CONF_USERNAME, Platform
 from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import ConfigEntryAuthFailed, ConfigEntryNotReady
+from homeassistant.helpers import device_registry
 from pyupgw import AuthenticationError, Client, create_api
 
 from .const import DOMAIN
@@ -32,6 +33,18 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     except Exception as ex:
         await client.aclose()
         raise ConfigEntryNotReady("Unable to retrieve data from upstream") from ex
+
+    dr = device_registry.async_get(hass)
+    for gateway in client.get_gateways():
+        formatted_mac = device_registry.format_mac(gateway.get_mac_address())
+        dr.async_get_or_create(
+            config_entry_id=entry.entry_id,
+            connections={(device_registry.CONNECTION_NETWORK_MAC, formatted_mac)},
+            identifiers={(DOMAIN, formatted_mac)},
+            model=gateway.get_model(),
+            name=gateway.get_name(),
+            sw_version=gateway.get_firmware_version(),
+        )
 
     hass.data[DOMAIN][entry.entry_id] = client
 
