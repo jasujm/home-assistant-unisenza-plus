@@ -10,10 +10,11 @@ from homeassistant.components.climate.const import (
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import ATTR_TEMPERATURE, UnitOfTemperature
 from homeassistant.core import HomeAssistant
+from homeassistant.exceptions import HomeAssistantError
 from homeassistant.helpers import device_registry
 from homeassistant.helpers.entity import DeviceInfo
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
-from pyupgw import Client, DeviceType, HvacDevice, RunningState, SystemMode
+from pyupgw import Client, ClientError, DeviceType, HvacDevice, RunningState, SystemMode
 
 from .const import DOMAIN
 
@@ -52,30 +53,45 @@ class UnisenzaPlusClimateEntity(ClimateEntity):
         self._device = device
         self._gateway_mac_address = device_registry.format_mac(gateway_mac_address)
 
-    async def async_update(self) -> None:
-        return await self._device.refresh()
-
     async def async_added_to_hass(self) -> None:
         self._device.subscribe(self._on_update_device)
 
     async def async_will_remove_from_hass(self) -> None:
         self._device.unsubscribe(self._on_update_device)
 
+    async def async_update(self) -> None:
+        try:
+            return await self._device.refresh()
+        except ClientError as ex:
+            raise HomeAssistantError(str(ex)) from ex
+
     async def async_set_hvac_mode(self, hvac_mode) -> None:
         """Set new HVAC mode"""
         if system_mode := _HVAC_MODE_TO_SYSTEM_MODE.get(hvac_mode):
-            await self._device.update_system_mode(system_mode)
+            try:
+                await self._device.update_system_mode(system_mode)
+            except ClientError as ex:
+                raise HomeAssistantError(str(ex)) from ex
 
     async def async_set_temperature(self, **kwargs) -> None:
         """Set new target temperature."""
         if target_temperature := kwargs.get(ATTR_TEMPERATURE):
-            await self._device.update_target_temperature(float(target_temperature))
+            try:
+                await self._device.update_target_temperature(float(target_temperature))
+            except ClientError as ex:
+                raise HomeAssistantError(str(ex)) from ex
 
     async def async_turn_on(self) -> None:
-        await self._device.update_system_mode(SystemMode.HEAT)
+        try:
+            await self._device.update_system_mode(SystemMode.HEAT)
+        except ClientError as ex:
+            raise HomeAssistantError(str(ex)) from ex
 
     async def async_turn_off(self) -> None:
-        await self._device.update_system_mode(SystemMode.OFF)
+        try:
+            await self._device.update_system_mode(SystemMode.OFF)
+        except ClientError as ex:
+            raise HomeAssistantError(str(ex)) from ex
 
     @property
     def unique_id(self):
