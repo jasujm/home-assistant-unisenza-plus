@@ -21,7 +21,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     try:
         api = await create_api(entry.data[CONF_USERNAME], entry.data[CONF_PASSWORD])
     except AuthenticationError as ex:
-        raise ConfigEntryAuthFailed(f"Unable to authenticate") from ex
+        raise ConfigEntryAuthFailed("Unable to authenticate") from ex
     except Exception as ex:
         raise ConfigEntryNotReady("Unable to connect") from ex
 

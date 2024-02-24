@@ -40,8 +40,6 @@ awscrt==0.20.2
     # via pyupgw
 bcrypt==4.0.1
     # via homeassistant
-black==23.12.1
-    # via -r requirements.in
 bleak==0.21.1
     # via
     #   bleak-retry-connector
@@ -78,8 +76,6 @@ charset-normalizer==3.3.2
     # via requests
 ciso8601==2.3.0
     # via homeassistant
-click==8.1.7
-    # via black
 cryptography==42.0.2
     # via
     #   bluetooth-data-tools
@@ -121,8 +117,6 @@ idna==3.6
     #   yarl
 ifaddr==0.2.0
     # via homeassistant
-isort==5.13.2
-    # via -r requirements.in
 jinja2==3.1.3
     # via homeassistant
 jmespath==1.0.1
@@ -139,20 +133,12 @@ multidict==6.0.4
     # via
     #   aiohttp
     #   yarl
-mypy-extensions==1.0.0
-    # via black
 orjson==3.9.14
     # via homeassistant
 packaging==23.2
-    # via
-    #   black
-    #   homeassistant
+    # via homeassistant
 paho-mqtt==1.6.1
     # via pyupgw
-pathspec==0.12.1
-    # via black
-platformdirs==4.1.0
-    # via black
 pyasn1==0.5.1
     # via
     #   python-jose
@@ -170,7 +156,9 @@ pyric==0.1.6.3
 python-dateutil==2.8.2
     # via botocore
 python-jose[cryptography]==3.3.0
-    # via pycognito
+    # via
+    #   pycognito
+    #   python-jose
 python-slugify==8.0.1
     # via homeassistant
 pytz==2023.3.post1
@@ -185,6 +173,8 @@ requests==2.31.0
     #   pycognito
 rsa==4.9
     # via python-jose
+ruff==0.2.2
+    # via -r requirements.in
 s3transfer==0.10.0
     # via boto3
 six==1.16.0
