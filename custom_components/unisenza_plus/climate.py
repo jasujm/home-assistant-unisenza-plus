@@ -54,19 +54,22 @@ class UnisenzaPlusClimateEntity(ClimateEntity):
         self._gateway_mac_address = device_registry.format_mac(gateway_mac_address)
 
     async def async_added_to_hass(self) -> None:
+        """Subscribe to devices on addition to Home Assistant."""
         self._device.subscribe(self._on_update_device)
 
     async def async_will_remove_from_hass(self) -> None:
+        """Unsubscribe from devices on removal from Home Assistant."""
         self._device.unsubscribe(self._on_update_device)
 
     async def async_update(self) -> None:
+        """Refresh device state from the cloud service."""
         try:
             return await self._device.refresh()
         except ClientError as ex:
             raise HomeAssistantError(str(ex)) from ex
 
-    async def async_set_hvac_mode(self, hvac_mode) -> None:
-        """Set new HVAC mode"""
+    async def async_set_hvac_mode(self, hvac_mode: HVACMode) -> None:
+        """Set new HVAC mode."""
         if system_mode := _HVAC_MODE_TO_SYSTEM_MODE.get(hvac_mode):
             try:
                 await self._device.update_system_mode(system_mode)
@@ -82,12 +85,14 @@ class UnisenzaPlusClimateEntity(ClimateEntity):
                 raise HomeAssistantError(str(ex)) from ex
 
     async def async_turn_on(self) -> None:
+        """Turn on the device."""
         try:
             await self._device.update_system_mode(SystemMode.HEAT)
         except ClientError as ex:
             raise HomeAssistantError(str(ex)) from ex
 
     async def async_turn_off(self) -> None:
+        """Turn off the device."""
         try:
             await self._device.update_system_mode(SystemMode.OFF)
         except ClientError as ex:
@@ -152,7 +157,7 @@ async def async_setup_entry(
     config_entry: ConfigEntry,
     async_add_entities: AddEntitiesCallback,
 ) -> None:
-    """Set up climate entities"""
+    """Set up the climate entities."""
     client: Client = hass.data[DOMAIN][config_entry.entry_id]
 
     async_add_entities(
