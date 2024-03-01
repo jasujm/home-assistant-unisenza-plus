@@ -1,5 +1,8 @@
-Unreleased
-----------
+Version 0.2
+-----------
+
+Date
+  2024-03-01
 
 Changed
  * Update `pyupgw` to version 0.12
