@@ -1,4 +1,5 @@
 """Unisenza Plus climate platform"""
+
 from __future__ import annotations
 
 from homeassistant.components.climate import ClimateEntity

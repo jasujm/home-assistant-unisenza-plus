@@ -1,3 +1,7 @@
-pyupgw>=0.11.1
+pyupgw>=0.12
 homeassistant>=2024.2
-ruff>=0.2.2
+ruff
+mypy
+pytest
+pytest-homeassistant-custom-component
+tzdata

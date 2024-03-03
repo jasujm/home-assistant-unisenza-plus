@@ -1,3 +1,9 @@
+Unreleased
+----------
+
+Added
+ * Tests and linters
+
 Version 0.2
 -----------
 

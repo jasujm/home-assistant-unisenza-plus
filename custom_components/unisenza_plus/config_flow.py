@@ -1,16 +1,17 @@
 """Config flow for Unisenza Plus integration."""
+
 from __future__ import annotations
 
 import logging
 from typing import Any
 
+import pyupgw
 import voluptuous as vol
 from homeassistant import config_entries
 from homeassistant.const import CONF_PASSWORD, CONF_USERNAME
 from homeassistant.core import HomeAssistant
 from homeassistant.data_entry_flow import FlowResult
 from homeassistant.exceptions import HomeAssistantError
-from pyupgw import AuthenticationError, create_api
 
 from .const import DOMAIN
 
@@ -31,8 +32,8 @@ async def validate_input(hass: HomeAssistant, data: dict[str, Any]) -> dict[str,
     """
 
     try:
-        await create_api(data[CONF_USERNAME], data[CONF_PASSWORD])
-    except AuthenticationError:
+        await pyupgw.create_api(data[CONF_USERNAME], data[CONF_PASSWORD])
+    except pyupgw.client.AuthenticationError:
         raise InvalidAuth
     except Exception:
         raise CannotConnect
@@ -41,7 +42,7 @@ async def validate_input(hass: HomeAssistant, data: dict[str, Any]) -> dict[str,
     return {"title": "Unisenza Plus"}
 
 
-class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
+class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):  # type: ignore
     """Handle a config flow for Unisenza Plus."""
 
     VERSION = 1
