@@ -3,6 +3,8 @@ Unreleased
 
 Added
  * Tests and linters
+ * Update `pyupgw` to version 0.13
+ * Use EUID as unique_id for devices that don't have serial number available
 
 Version 0.2
 -----------
