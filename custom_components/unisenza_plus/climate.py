@@ -36,6 +36,10 @@ _DEFAULT_MAX_TEMP = 30.0
 _TEMPERATURE_STEP = 0.5
 
 
+def _unique_id_for_device(device: HvacDevice):
+    return device.get_serial_number() or device.get_euid()
+
+
 class UnisenzaPlusClimateEntity(ClimateEntity):
     _enable_turn_on_off_backwards_compatibility = False
     _attr_should_poll = False
@@ -101,7 +105,7 @@ class UnisenzaPlusClimateEntity(ClimateEntity):
 
     @property
     def unique_id(self):
-        return self._device.get_serial_number()
+        return _unique_id_for_device(self._device)
 
     @property
     def device_info(self):
@@ -165,5 +169,5 @@ async def async_setup_entry(
         UnisenzaPlusClimateEntity(device, gateway.get_mac_address())
         for (gateway, device) in client.get_devices()
         if device.get_type() == DeviceType.HVAC
-        and device.get_serial_number() is not None
+        and _unique_id_for_device(device) is not None
     )
