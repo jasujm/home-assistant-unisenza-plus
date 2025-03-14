@@ -1,5 +1,8 @@
-Unreleased
-----------
+Version 0.3
+-----------
+
+Date
+  2025-03-14
 
 Added
  * Tests and linters
