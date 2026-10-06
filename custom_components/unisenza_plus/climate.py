@@ -161,7 +161,7 @@ class UnisenzaPlusClimateEntity(ClimateEntity):
         self.schedule_update_ha_state(False)
         
     @property
-    def extra_state_attributes(self) -> dict[str, any] | None:
+    def extra_state_attributes(self):
         floor_temp = getattr(self._device, "floor_temperature", None)
         return {"floor_temperature": floor_temp} if floor_temp is not None else None
 
