@@ -122,6 +122,10 @@ class UnisenzaPlusClimateEntity(ClimateEntity):
     @property
     def current_temperature(self):
         return self._device.get_current_temperature()
+       
+    @property
+    def current_humidity(self) -> float | None:
+        return getattr(self._device, "humidity", None)
 
     @property
     def target_temperature(self):
@@ -155,6 +159,11 @@ class UnisenzaPlusClimateEntity(ClimateEntity):
 
     def _on_update_device(self, device, _changes):
         self.schedule_update_ha_state(False)
+        
+    @property
+    def extra_state_attributes(self) -> dict[str, any] | None:
+        floor_temp = getattr(self._device, "floor_temperature", None)
+        return {"floor_temperature": floor_temp} if floor_temp is not None else None
 
 
 async def async_setup_entry(
