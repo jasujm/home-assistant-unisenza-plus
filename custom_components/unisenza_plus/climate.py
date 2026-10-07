@@ -162,9 +162,9 @@ class UnisenzaPlusClimateEntity(ClimateEntity):
         
     @property
     def extra_state_attributes(self):
-        attrs = {
-            "floor_temperature": self._device.get_floor_temperature(),
-        }
+        attrs = {}
+        if (floor_temperature := self._device.get_floor_temperature()) is not None:
+            attrs["floor_temperature"] = floor_temperature
         if (battery := self._device.get_battery_level()) is not None:
             attrs["battery_level"] = battery
 
