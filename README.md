@@ -11,6 +11,7 @@ To use the integration, you need to create an account for the Unisenza Plus clou
 The following devices have been tested, and are known to work with the integration:
 
 * Yali D+ radiators
+* Purmo Unisenza Plus Electronic Room Thermostat (`PUMT021`)
 
 ## Installing
 
