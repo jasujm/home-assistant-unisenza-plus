@@ -1,5 +1,5 @@
 pyupgw>=0.14
-homeassistant>=2026.10
+homeassistant>=2026.9
 ruff
 mypy
 pytest
