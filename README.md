@@ -1,6 +1,6 @@
 # Home Assistant integration for Unisenza Plus
 
-Unisenza Plus is an IoT family that connects smart thermostats and other devices manufactured by [Purmo](https://global.purmo.com/>) to a cloud service via the Unisenza Plus Gateway.
+Unisenza Plus is a product line that connects smart thermostats and other devices manufactured by [Purmo](https://global.purmo.com/>) to a cloud service via the Unisenza Plus Gateway.
 
 This integration exposes the smart thermostats controlled via the cloud service as [climate entities](https://www.home-assistant.io/integrations/climate/).
 
