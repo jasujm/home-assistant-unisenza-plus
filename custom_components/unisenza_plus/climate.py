@@ -122,7 +122,7 @@ class UnisenzaPlusClimateEntity(ClimateEntity):
     @property
     def current_temperature(self):
         return self._device.get_current_temperature()
-       
+
     @property
     def current_humidity(self) -> float | None:
         return self._device.get_humidity()
@@ -159,7 +159,7 @@ class UnisenzaPlusClimateEntity(ClimateEntity):
 
     def _on_update_device(self, device, _changes):
         self.schedule_update_ha_state(False)
-        
+
     @property
     def extra_state_attributes(self):
         attrs = {}
