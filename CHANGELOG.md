@@ -1,3 +1,16 @@
+Version 0.4
+-----------
+
+Date
+  2026-10-17
+
+Added
+ * Support for floor temperature, humidity and battery levels
+
+Changed
+ * Update `pyupgw` to version 0.13
+ * Update supported Home Assistant version to 2026.9
+
 Version 0.3
 -----------
 

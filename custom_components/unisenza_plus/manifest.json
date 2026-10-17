@@ -1,7 +1,7 @@
 {
     "domain": "unisenza_plus",
     "name": "Unisenza Plus",
-    "version": "0.2",
+    "version": "0.4",
     "codeowners": ["@jasujm"],
     "config_flow": true,
     "dependencies": [],
